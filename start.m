@@ -61,14 +61,15 @@ title('After');
 
 %% Challenge image. (We have lost 99% of information)
 clearvars;
-I=double(imread('image6_toRestore.jpg'));
+name= './data/image6';
+I=double(imread([ name '_toRestore.tif']));
 %Normalize values into [0,1]
 I=I/256;
 
 %Number of pixels for each dimension, and number of channels
 [ni, nj, nC] = size(I);
 
-mask_img=double(imread('image6_mask.jpg'));
+mask_img=double(imread([name '_mask.tif']));
 mask = mask_img >128; %mask(i,j) == 1 means we have lost information in that pixel
                       %mask(i,j) == 0 means we have information in that
                       %pixel
@@ -92,7 +93,7 @@ title('After');
 clearvars;
 
 %Read the image
-I = double(imread('image_to_Restore.png'));
+I = double(imread('./data/image_to_Restore.png'));
 
 [ni, nj, nC] = size(I);
 
@@ -106,8 +107,14 @@ I_ch2 = I(:,:,2);
 I_ch3 = I(:,:,3);
 
 %TO COMPLETE 1
-mask = ???? ; %mask_img(i,j) == 1 means we have lost information in that pixel
+mask = zeros(size(I,1),size(I,2));
+mask = mask | (I_ch1>0.8 & I_ch2<0.27 & I_ch3<0.23); %Redish colors; %mask_img(i,j) == 1 means we have lost information in that pixel
                                       %mask(i,j) == 0 means we have information in that pixel
+figure(1);
+subplot(1,2,1);
+imshow(I);
+subplot(1,2,2);
+imshow(mask);
 
 %%%Parameters for gradient descent (you do not need for week1)
 %param.dt = 5*10^-7;
@@ -120,7 +127,7 @@ param.hj = 1 / (nj-1);
 
 % for each channel 
 
-figure(1)
+figure(2)
 imshow(I);
 title('Before')
 
@@ -128,6 +135,6 @@ Iinp(:,:,1)=sol_Laplace_Equation_Axb(I_ch1, mask, param);
 Iinp(:,:,2)=sol_Laplace_Equation_Axb(I_ch2, mask, param);
 Iinp(:,:,3)=sol_Laplace_Equation_Axb(I_ch3, mask, param);
     
-figure(2)
+figure(3)
 imshow(Iinp)
 title('After');
