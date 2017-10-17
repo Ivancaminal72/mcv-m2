@@ -12,7 +12,7 @@ clearvars;
 %  image5_toRestore.jpg
 
 %name= 'image5';
-name= 'image1';
+name= './data/image1';
 
 I = double(imread([ name '_toRestore.jpg']));
 %I=I(1:10,1:10);
