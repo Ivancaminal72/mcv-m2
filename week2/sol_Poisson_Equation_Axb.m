@@ -1,4 +1,4 @@
-function [u] = sol_Poisson_Equation_Axb(f, dom2Inp, param)
+function [u] = sol_Poisson_Equation_Axb(f, mask, param)
 %this code is not intended to be efficient. 
 
 [ni, nj]=size(f);
@@ -6,8 +6,8 @@ function [u] = sol_Poisson_Equation_Axb(f, dom2Inp, param)
 %We add the ghost boundaries (for the boundary conditions)
 f_ext = zeros(ni+2, nj+2);
 f_ext(2:end-1, 2:end-1) = f;
-dom2Inp_ext=zeros(ni+2, nj+2);
-dom2Inp_ext (2:end-1, 2:end-1) = dom2Inp;
+mask_ext=zeros(ni+2, nj+2);
+mask_ext (2:end-1, 2:end-1) = mask;
 
 %Store memory for the A matrix and the b vector    
 nPixels =(ni+2)*(nj+2); %Number of pixels
@@ -120,7 +120,7 @@ for j=2:nj+1
         %from image matrix (i,j) coordinates to vectorial (p) coordinate
         p = (j-1)*(ni+2)+i;
                                             
-        if (dom2Inp_ext(i,j)==1) %If we have to inpaint this pixel
+        if (mask_ext(i,j)==1) %If we have to poison this pixel
             
             %Fill Idx_Ai, idx_Aj and a_ij with the corresponding values and
             %vector b
@@ -150,7 +150,11 @@ for j=2:nj+1
             a_ij(idx) = 1;
             idx=idx+1;
             
-            b(p) = 0;
+            if (isfield(param, 'driving'))
+                b(p) = param.driving(i+1,j+1);
+            else
+                b(p) = 0;
+            end
     
         else %we do not have to inpaint this pixel 
             

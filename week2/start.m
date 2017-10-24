@@ -14,10 +14,10 @@ mask_dst=logical(imread('./data/mask_dst_eyes.png'));
 for nC = 1: nChannels
     
     %TO DO: COMPLETE the ??
-    drivingGrad_i = ??
-    drivingGrad_j = ??
+    drivingGrad_i = sol_DiBwd(src(:,:,nC));
+    drivingGrad_j = sol_DjBwd(src(:,:,nC));
 
-    driving_on_src = ??
+    driving_on_src = sol_DiFwd(drivingGrad_i) + sol_DjFwd(drivingGrad_i);
     
     driving_on_dst = zeros(size(src(:,:,1)));   
     driving_on_dst(mask_dst(:)) = driving_on_src(mask_src(:));
@@ -35,10 +35,10 @@ mask_dst=logical(imread('./data/mask_dst_mouth.png'));
 for nC = 1: nChannels
     
     %TO DO: COMPLETE the ??
-    drivingGrad_i = ??
-    drivingGrad_j = ??
+    drivingGrad_i = sol_DiBwd(src(:,:,nC));
+    drivingGrad_j = sol_DjBwd(src(:,:,nC));
 
-    driving_on_src = ??
+    driving_on_src = sol_DiFwd(drivingGrad_i) + sol_DjFwd(drivingGrad_i);
     
     driving_on_dst = zeros(size(src(:,:,1)));  
     driving_on_dst(mask_dst(:)) = driving_on_src(mask_src(:));
