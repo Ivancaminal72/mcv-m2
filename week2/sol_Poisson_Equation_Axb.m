@@ -185,4 +185,4 @@ end
     
     %Eliminate the ghost boundaries
     u=full(u_ext(2:end-1, 2:end-1));
-    
+end
