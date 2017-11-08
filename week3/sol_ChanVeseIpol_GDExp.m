@@ -20,51 +20,54 @@ hi=1;
 hj=1;
 
 
-phi=phi_0;
+phi=zeros(ni+2,nj+2);
+phi(2:end-1,2:end-1)=phi_0;
 dif=inf;
 nIter=0;
 while dif>tol && nIter<iterMax
     
     phi_old=phi;
-    nIter=nIter+1;        
-    
+    nIter=nIter+1; 
     
     %Fixed phi, Minimization w.r.t c1 and c2 (constant estimation)
-    c1 = ??; %TODO 1: Line to complete
-    c2 = ??; %TODO 2: Line to complete
+    c1 = sum(I.*((1/2)*(1+(2/pi)*atan(phi_old/epHeaviside))))/(sum((1/2).*(1+(2/pi)*atan(phi_old/epHeaviside)))); %TODO 1: Line to complete
+    c2 = sum(I.*(1-((1/2)*(1+(2/pi)*atan(phi_old/epHeaviside)))))/sum((1-((1/2).*(1+(2/pi)*atan(phi_old/epHeaviside))))); %TODO 2: Line to complete
     
     %Boundary conditions
-    phi(1,:)   = ??; %TODO 3: Line to complete
-    phi(end,:) = ??; %TODO 4: Line to complete
+    phi(1,:)   = phi_old(2,:); %TODO 3: Line to complete
+    phi(end,:) = phi_old(end-1,:); %TODO 4: Line to complete
 
-    phi(:,1)   = ??; %TODO 5: Line to complete
-    phi(:,end) = ??; %TODO 6: Line to complete
+    phi(:,1)   = phi_old(:,2); %TODO 5: Line to complete
+    phi(:,end) = phi_old(:,end-1); %TODO 6: Line to complete
 
     
     %Regularized Dirac's Delta computation
-    delta_phi = sol_diracReg(phi, epHeaviside);   %notice delta_phi=H'(phi)	
+    delta_phi = sol_diracReg(phi_old, epHeaviside);   %notice delta_phi=H'(phi)	
     
     %derivatives estimation
     %i direction, forward finite differences
-    phi_iFwd  = ??; %TODO 7: Line to complete
-    phi_iBwd  = ??; %TODO 8: Line to complete
+    phi_iFwd  = DiFwd(phi_old); %TODO 7: Line to complete
+    phi_iBwd  = DiBwd(phi_old); %TODO 8: Line to complete
     
     %j direction, forward finitie differences
-    phi_jFwd  = ??; %TODO 9: Line to complete
-    phi_jBwd  = ??; %TODO 10: Line to complete
+    phi_jFwd  = DjFwd(phi_old); %TODO 9: Line to complete
+    phi_jBwd  = DjBwd(phi_old); %TODO 10: Line to complete
     
     %centered finite diferences
-    phi_icent   = ??; %TODO 11: Line to complete
-    phi_jcent   = ??; %TODO 12: Line to complete
+    phi_icent   = (DiFwd(phi_old)+DiBwd(phi_old))/2; %TODO 11: Line to complete
+    phi_jcent   = (DjFwd(phi_old)+DjBwd(phi_old))/2; %TODO 12: Line to complete
     
     %A and B estimation (A y B from the Pascal Getreuer's IPOL paper "Chan
     %Vese segmentation
-    A = ??; %TODO 13: Line to complete
-    B = ??; %TODO 14: Line to complete
+    A = mu./sqrt((eta^2)+(phi_iFwd^2)+(phi_jcent^2)); %TODO 13: Line to complete
+    B = mu./sqrt((eta^2)+(phi_icent^2)+ (phi_jFwd^2)); %TODO 14: Line to complete
     
     
     %%Equation 22, for inner points
-    phi(??) = ??; %TODO 15: Line to complete
+     phi(2:end-1,2:end-1) =(phi_old(2:end-1,2:end-1) + dt*delta_phi(2:end-1,2:end-1).*(A(2:end-1,2:end-1).*phi_old(3:end,2:end-1)...
+        A(1:end-2,2:end-1).*phi_old(1:end-2,2:end-1) + B.*phi_old(2:end-1,3:end) + B(2:end-1,1:end-2).*phi_old(2:end-1,1:end-2)...
+        - nu -lambda1*(I-c1).^2+lambda2*(I-c2).^2))/...
+        (1+dt*delta_phi(2:end-1,2:end-1).*(A(2:end-1,2:end-1)+A(1:end-2,2:end-1)+B(2:end-1,2:end-1)+B(2:end-1,1:end-2));%TODO 15: Line to complete
     
             
     %Reinitialization of phi
