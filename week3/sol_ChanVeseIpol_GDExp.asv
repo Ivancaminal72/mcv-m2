@@ -22,8 +22,6 @@ hj=1;
 
 phi=zeros(ni+2,nj+2);
 phi(2:end-1,2:end-1)=phi_0;
-
-
 dif=inf;
 nIter=0;
 while dif>tol && nIter<iterMax
@@ -60,12 +58,12 @@ while dif>tol && nIter<iterMax
     
     %centered finite diferences
     phi_icent   = (phi_iFwd+phi_iBwd)/2; %TODO 11: Line to complete
-    phi_jcent   = (phi_jFwd+phi_jBwd)/2; %TODO 12: Line to complete
+    phi_jcent   = (phi_jFwd+phi_jBwd))/2; %TODO 12: Line to complete
     
     %A and B estimation (A y B from the Pascal Getreuer's IPOL paper "Chan
     %Vese segmentation
-    A = mu./sqrt((eta^2)+(phi_iFwd.^2)+(phi_jcent.^2)); %TODO 13: Line to complete
-    B = mu./sqrt((eta^2)+(phi_icent.^2)+ (phi_jFwd.^2)); %TODO 14: Line to complete
+    A = mu./sqrt((eta^2)+(phi_iFwd^2)+(phi_jcent^2)); %TODO 13: Line to complete
+    B = mu./sqrt((eta^2)+(phi_icent^2)+ (phi_jFwd^2)); %TODO 14: Line to complete
     
     
     %%Equation 22, for inner points
@@ -95,8 +93,8 @@ while dif>tol && nIter<iterMax
     %Plot the level sets surface
     subplot(1,2,1) 
         %The level set function
-        surfc(phi(2:end-1,2:end-1))  %TODO 16: Line to complete 
-        hold on
+        %surfc(phi(2:end-1,2:end-1))  %TODO 16: Line to complete 
+       % hold on
         %The zero level set over the surface
         contour(phi(2:end-1,2:end-1)); %TODO 17: Line to complete
         hold off
@@ -113,5 +111,5 @@ while dif>tol && nIter<iterMax
         axis off;
         hold off
     drawnow;
-    pause(10); 
+    pause(.0001); 
 end
